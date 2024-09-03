@@ -1,20 +1,9 @@
-import {createApi, retry} from '@reduxjs/toolkit/query/react';
+import {createApi} from '@reduxjs/toolkit/query/react';
 import axiosBaseQuery from './root';
-
-const baseUrl = 'http://localhost:3000';
-
-const baseQuery = retry(
-  axiosBaseQuery({
-    baseUrl,
-  }),
-  {
-    maxRetries: 1,
-  },
-);
 
 export const symboleApi = createApi({
   reducerPath: 'symbolApi',
-  baseQuery,
+  baseQuery: axiosBaseQuery,
   tagTypes: ['Symbols'],
   endpoints: builder => ({
     getSymbols: builder.query<any, void>({

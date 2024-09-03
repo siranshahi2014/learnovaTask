@@ -1,35 +1,6 @@
-import {BaseQueryFn} from '@reduxjs/toolkit/query/react';
-import axios, {AxiosRequestConfig, AxiosError} from 'axios';
+import {fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 
-const AxiosService = axios.create();
-
-const axiosBaseQuery =
-  (
-    {baseUrl}: {baseUrl: string} = {baseUrl: ''},
-  ): BaseQueryFn<
-    {
-      url: string;
-      method: AxiosRequestConfig['method'];
-      data?: AxiosRequestConfig['data'];
-      params?: AxiosRequestConfig['params'];
-      headers?: AxiosRequestConfig['headers'];
-    },
-    any,
-    AxiosError
-  > =>
-  async ({url, method, data, params, headers}) => {
-    try {
-      const result = await AxiosService({
-        url: baseUrl + url,
-        method,
-        data,
-        params,
-        headers,
-      });
-      return {...result.data};
-    } catch (axiosError) {
-      return {axiosError};
-    }
-  };
+const baseUrl = 'http://localhost:3000';
+export const axiosBaseQuery = fetchBaseQuery({baseUrl});
 
 export default axiosBaseQuery;
