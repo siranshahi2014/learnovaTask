@@ -26,6 +26,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import {Provider} from 'react-redux';
 import {store} from '~/features/store';
+import AppNavigator from '~/navigation/AppNavigator';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -66,7 +67,8 @@ function App(): React.JSX.Element {
 
   return (
     <Provider store={store}>
-      <SafeAreaView style={backgroundStyle}>
+      <AppNavigator />
+      {/* <SafeAreaView style={backgroundStyle}>
         <StatusBar
           barStyle={isDarkMode ? 'light-content' : 'dark-content'}
           backgroundColor={backgroundStyle.backgroundColor}
@@ -95,7 +97,7 @@ function App(): React.JSX.Element {
             <LearnMoreLinks />
           </View>
         </ScrollView>
-      </SafeAreaView>
+      </SafeAreaView> */}
     </Provider>
   );
 }
