@@ -1,7 +1,7 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import {HomeScreen} from '~/screens';
+import {HomeScreen, LeaderBoardScreen} from '~/screens';
 import {CustomTabBar} from '~/components';
 
 const Tab = createBottomTabNavigator();
@@ -9,12 +9,20 @@ const Stack = createNativeStackNavigator();
 
 export type MainStackParamList = {
   Home: undefined;
+  LeaderBoard: undefined;
 };
 
 export const tabStack = [
   {
     name: 'Home',
     component: HomeScreen,
+    options: {
+      headerShown: false,
+    },
+  },
+  {
+    name: 'LeaderBoard',
+    component: LeaderBoardScreen,
     options: {
       headerShown: false,
     },

@@ -3,6 +3,7 @@ import {Button, FlatList, StyleSheet, Text, View} from 'react-native';
 import {scale} from 'react-native-size-matters';
 import {CustomContainer, SymboleCard} from '~/components';
 import {useAppDispatch} from '~/features/hooks';
+import {addEntry} from '~/features/leaderboardSlice';
 import {
   symboleApi,
   useGetSymbolsQuery,
@@ -16,6 +17,7 @@ import {
 } from '~/features/symboleSlice';
 import {useMemoryGame} from '~/hooks/game';
 import {Colors} from '~/styles/colors';
+import uuid from 'react-native-uuid';
 
 const HomeScreen = () => {
   const {isLoading, isError, refetch} = useGetSymbolsQuery();
@@ -41,6 +43,9 @@ const HomeScreen = () => {
   useEffect(() => {
     if (cards.length && cards.every(card => card.isMatched)) {
       dispatch(setGameOver());
+      dispatch(
+        addEntry({id: uuid.v4() as string, name: 'Soudabeh', score: moves}),
+      );
     }
   }, [cards, dispatch]);
 

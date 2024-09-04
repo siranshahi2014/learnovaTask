@@ -11,18 +11,20 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {symboleApi} from './services/symbolRtkService';
 import symboleReducer from './symboleSlice'; // Import the game slice
-import persistReducer from 'redux-persist/es/persistReducer';
+import persistReducer, {PersistPartial} from 'redux-persist/es/persistReducer';
+import leaderboardReducer, {LeaderboardState} from './leaderboardSlice';
 
 const persistConfig = {
   key: 'root',
   version: 1,
   storage: AsyncStorage,
-  whiteList: ['game'],
+  whiteList: ['game', 'leaderboard'],
 };
 
 export const store = configureStore({
   reducer: {
     game: persistReducer(persistConfig, symboleReducer),
+    leaderboard: persistReducer(persistConfig, leaderboardReducer),
     [symboleApi.reducerPath]: symboleApi.reducer,
   },
   middleware: getDefaultMiddleware =>

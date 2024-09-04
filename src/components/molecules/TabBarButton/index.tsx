@@ -32,21 +32,7 @@ const TabBarButton = ({
           <Icon name="home-24" size={24} color={Colors.txtMedium} />
         )
       ) : null}
-      {name === 'Add' ? (
-        isFocused ? (
-          <Icon name="add" size={24} color={Colors.primary} />
-        ) : (
-          <Icon name="add" size={24} color={Colors.txtMedium} />
-        )
-      ) : null}
-      {name === 'Notification' ? (
-        isFocused ? (
-          <Icon name="notification" size={24} color={Colors.primary} />
-        ) : (
-          <Icon name="notification" size={24} color={Colors.txtMedium} />
-        )
-      ) : null}
-      {name === 'Profile' ? (
+      {name === 'LeaderBoard' ? (
         isFocused ? (
           <Icon name="user" size={24} color={Colors.primary} />
         ) : (
