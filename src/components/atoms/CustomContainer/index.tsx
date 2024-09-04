@@ -9,12 +9,16 @@ type ContainerProps = {
   children: any;
   isLoading?: boolean;
   bgColor?: string;
+  isError?: boolean;
+  onPress?: () => void;
 };
 const CustomContainer = ({
   style,
   children,
   isLoading = false,
   bgColor,
+  isError = false,
+  onPress,
 }: ContainerProps) => {
   return (
     <View
@@ -36,6 +40,7 @@ const CustomContainer = ({
         ]}>
         {isLoading && <CustomLoading />}
         {children}
+        {isError && <ErrorView onPress={onPress} errorMsg={errorMsg} />}
       </View>
     </View>
   );

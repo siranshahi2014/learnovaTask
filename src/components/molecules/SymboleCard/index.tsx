@@ -13,27 +13,27 @@ const SymboleCard = ({
 }) => {
   const flipAnim = useRef(new Animated.Value(0)).current;
 
-  const frontInterpolate = flipAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '180deg'],
-  });
+  const getStyle = (flipAnim, front = true) => {
+    const rotation = front
+      ? flipAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: ['0deg', '180deg'],
+        })
+      : flipAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: ['180deg', '360deg'],
+        });
 
-  const backInterpolate = flipAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['180deg', '360deg'],
-  });
-
-  const frontAnimatedStyle = {
-    transform: [{rotateY: frontInterpolate}],
+    return {
+      transform: [{rotateY: rotation}],
+    };
   };
 
-  const backAnimatedStyle = {
-    transform: [{rotateY: backInterpolate}],
-  };
+  const frontStyle = getStyle(flipAnim, true);
+  const backStyle = getStyle(flipAnim, false);
 
   useEffect(() => {
     const flipToValue = item.isFlipped ? 0 : 1;
-    item.isFlipped = !item.isFlipped;
 
     Animated.timing(flipAnim, {
       toValue: flipToValue,
@@ -50,11 +50,11 @@ const SymboleCard = ({
       disabled={item.isFlipped || item.isMatched}
       activeOpacity={0.7}>
       <View style={styles.container}>
-        <Animated.View style={[styles.front, backAnimatedStyle]}>
+        <Animated.View style={[styles.front, backStyle]}>
           <Text>Details</Text>
         </Animated.View>
 
-        <Animated.View style={[styles.front, styles.back, frontAnimatedStyle]}>
+        <Animated.View style={[styles.front, styles.back, frontStyle]}>
           <Text>{item.symbol}</Text>
         </Animated.View>
       </View>

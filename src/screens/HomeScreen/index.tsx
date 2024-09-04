@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo} from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
 import {Button, FlatList, StyleSheet, Text, View} from 'react-native';
 import {scale} from 'react-native-size-matters';
 import {CustomContainer, SymboleCard} from '~/components';
@@ -18,7 +18,7 @@ import {useMemoryGame} from '~/hooks/game';
 import {Colors} from '~/styles/colors';
 
 const HomeScreen = () => {
-  const {isLoading} = useGetSymbolsQuery();
+  const {isLoading, isError, refetch} = useGetSymbolsQuery();
   const {cards, moves, time, isGameOver, handleCardFlip, difficulty} =
     useMemoryGame();
   const dispatch = useAppDispatch();
@@ -64,12 +64,23 @@ const HomeScreen = () => {
     onRestartGame();
   };
 
-  const renderItem = ({item}: {item: SymboleCard}) => {
-    return <SymboleCard item={item} onPress={() => handleCardFlip(item.id)} />;
-  };
+  const renderItem = useCallback(
+    ({item}: {item: SymboleCard}) => {
+      return (
+        <SymboleCard item={item} onPress={() => handleCardFlip(item.id)} />
+      );
+    },
+    [handleCardFlip],
+  );
 
   return (
-    <CustomContainer bgColor={Colors.disabled} isLoading={isLoading}>
+    <CustomContainer
+      bgColor={Colors.disabled}
+      isLoading={isLoading}
+      isError={isError}
+      onPress={() => {
+        refetch();
+      }}>
       <Text style={styles.title}>Memory Game</Text>
       <Text style={styles.info}>
         Moves: {moves} | Time: {time}s
