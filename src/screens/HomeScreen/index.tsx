@@ -91,7 +91,7 @@ const HomeScreen = () => {
       />
       {isGameOver && (
         <View style={{marginTop: scale(16)}}>
-          <Text style={styles.info}>You won!</Text>
+          <Text style={styles.info}>Game finished!</Text>
           <Button title="Restart" onPress={onRestartGame} />
         </View>
       )}
