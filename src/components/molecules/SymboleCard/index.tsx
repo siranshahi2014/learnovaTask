@@ -1,52 +1,60 @@
-import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React, {useEffect, useRef} from 'react';
+import {View, Text, StyleSheet, Animated} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-  interpolate,
-} from 'react-native-reanimated';
 import {scale} from 'react-native-size-matters';
 import {width} from '~/utils/dimension';
 
-const SymboleCard = ({item}: {item: SymboleCard}) => {
-  const anim = useSharedValue(0);
+const SymboleCard = ({
+  item,
+  onPress,
+}: {
+  item: SymboleCard;
+  onPress: () => void;
+}) => {
+  const flipAnim = useRef(new Animated.Value(0)).current;
 
-  const showStyle = useAnimatedStyle(() => {
-    const rotateY = interpolate(anim.value, [0, 1], [0, 180]);
-    const style = {
-      transform: [{rotateY: `${rotateY}deg`}],
-    };
-    return style;
+  const frontInterpolate = flipAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '180deg'],
   });
 
-  const hideStyle = useAnimatedStyle(() => {
-    const rotateY = interpolate(anim.value, [0, 1], [180, 360]);
-    const style = {
-      transform: [{rotateY: `${rotateY}deg`}],
-    };
-    return style;
+  const backInterpolate = flipAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['180deg', '360deg'],
   });
 
-  const handlePress = () => {
-    item.isFlipped = !item.isFlipped;
-    anim.value = withTiming(item.isFlipped ? 1 : 0, {
-      duration: 1000,
-    });
+  const frontAnimatedStyle = {
+    transform: [{rotateY: frontInterpolate}],
   };
+
+  const backAnimatedStyle = {
+    transform: [{rotateY: backInterpolate}],
+  };
+
+  useEffect(() => {
+    const flipToValue = item.isFlipped ? 0 : 1;
+    item.isFlipped = !item.isFlipped;
+
+    Animated.timing(flipAnim, {
+      toValue: flipToValue,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  }, [item.isFlipped]);
 
   return (
     <TouchableOpacity
       key={item.id}
-      style={styles.container}
-      onPress={handlePress}
+      style={{flex: 1}}
+      onPress={onPress}
+      disabled={item.isFlipped || item.isMatched}
       activeOpacity={0.7}>
-      <View style={styles.innerContainer}>
-        <Animated.View style={[styles.item, showStyle]}>
+      <View style={styles.container}>
+        <Animated.View style={[styles.front, backAnimatedStyle]}>
           <Text>Details</Text>
         </Animated.View>
-        <Animated.View style={[styles.item, styles.hide, hideStyle]}>
+
+        <Animated.View style={[styles.front, styles.back, frontAnimatedStyle]}>
           <Text>{item.symbol}</Text>
         </Animated.View>
       </View>
@@ -76,7 +84,19 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'black',
   },
-  hide: {
+  front: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backfaceVisibility: 'hidden',
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: 'black',
+  },
+  back: {
     backgroundColor: 'lightgray',
+    position: 'absolute',
   },
 });

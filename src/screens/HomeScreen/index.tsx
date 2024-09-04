@@ -1,52 +1,100 @@
-import React, {useEffect, useMemo, useState} from 'react';
-import {
-  Animated,
-  FlatList,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, {useEffect, useMemo} from 'react';
+import {Button, FlatList, StyleSheet, Text, View} from 'react-native';
+import {scale} from 'react-native-size-matters';
 import {CustomContainer, SymboleCard} from '~/components';
-import {useGetSymbolsQuery} from '~/features/services/symbolRtkService';
+import {useAppDispatch} from '~/features/hooks';
+import {
+  symboleApi,
+  useGetSymbolsQuery,
+} from '~/features/services/symbolRtkService';
+import {
+  incrementTime,
+  resetGame,
+  setCards,
+  setGameOver,
+} from '~/features/symboleSlice';
+import {useMemoryGame} from '~/hooks/game';
 import {Colors} from '~/styles/colors';
-import {height} from '~/utils/dimension';
 
 const HomeScreen = () => {
-  const {data, isLoading} = useGetSymbolsQuery();
-  const [selectedList, setSelectedList] = useState<number[]>([]);
+  const {isLoading} = useGetSymbolsQuery();
+  const {cards, moves, time, isGameOver, handleCardFlip} = useMemoryGame();
+  const dispatch = useAppDispatch();
 
-  const symboleList = useMemo<SymboleCard[]>(() => {
-    if (!data) return [];
-    const concatList = data.concat(data);
-    const randomList = concatList.sort(() => Math.random() - 0.5);
+  // useEffect(() => {
+  //   if (data) {
+  //     const concatList = data.concat(data);
+  //     const randomList = concatList.sort(() => Math.random() - 0.5);
 
-    const result = randomList.map((item, index) => ({
-      id: index,
-      symbol: item.symbol,
-      flipped: false,
-      matched: false,
-    }));
-    return result;
-  }, [data]);
+  //     const result = randomList.map((item, index) => ({
+  //       id: index,
+  //       symbol: item.symbol,
+  //       isFlipped: false,
+  //       isMatched: false,
+  //     }));
+  //     dispatch(setCards(result));
+  //   }
+  // }, [data, dispatch]);
 
+  useEffect(() => {
+    if (cards.length && cards.every(card => card.isMatched)) {
+      dispatch(setGameOver());
+    }
+  }, [cards, dispatch]);
+
+  useEffect(() => {
+    if (!isGameOver) {
+      const timer = setInterval(() => {
+        dispatch(incrementTime());
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [dispatch, isGameOver]);
+
+  const onRestartGame = () => {
+    dispatch(resetGame());
+    dispatch(symboleApi.util.resetApiState());
+  };
   const renderItem = ({item, index}: {item: SymboleCard; index: number}) => {
-    //const itemHeight = height / (data?.length / 2) - 20;
-    return <SymboleCard item={item} />;
+    return <SymboleCard item={item} onPress={() => handleCardFlip(item.id)} />;
   };
 
   return (
-    <CustomContainer isLoading={isLoading} bgColor={Colors.disabled}>
+    <CustomContainer bgColor={Colors.disabled} isLoading={isLoading}>
+      <Text style={styles.title}>Memory Game</Text>
+      <Text style={styles.info}>
+        Moves: {moves} | Time: {time}s
+      </Text>
       <FlatList
-        data={symboleList}
+        data={cards}
+        extraData={cards}
         renderItem={renderItem}
         keyExtractor={item => item.id.toString()}
         numColumns={2}
       />
+      {isGameOver && (
+        <View style={{marginTop: scale(16)}}>
+          <Text style={styles.info}>You won!</Text>
+          <Button title="Restart" onPress={onRestartGame} />
+        </View>
+      )}
     </CustomContainer>
   );
 };
 
 export default HomeScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 16,
+  },
+  info: {
+    fontSize: 18,
+    textAlign: 'center',
+    marginBottom: 16,
+  },
+});

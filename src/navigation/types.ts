@@ -1,8 +1,6 @@
-import type {AuthStackParamList} from './auth/AuthStack';
-import {UserStackParamList} from './users/UserStack';
+import {MainStackParamList} from './main/MainStack';
 
-export type RootStackParamList = AuthStackParamList & UserStackParamList;
-//HomeStackParamList;
+export type RootStackParamList = MainStackParamList;
 
 declare global {
   // Specifying this type is important if you heavily use useNavigation, Link etc. in your app since it'll ensure type-safety.

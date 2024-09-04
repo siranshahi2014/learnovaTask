@@ -10,16 +10,20 @@ import {
 } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {symboleApi} from './services/symbolRtkService';
+import gameReducer from './symboleSlice'; // Import the game slice
 
-const persistConfig = {
-  key: 'root',
-  version: 1,
-  storage: AsyncStorage,
-  whiteList: [],
-};
+// const persistConfig = {
+//   key: 'root',
+//   version: 1,
+//   storage: AsyncStorage,
+//   whiteList: ['game'],
+// };
 
 export const store = configureStore({
-  reducer: {[symboleApi.reducerPath]: symboleApi.reducer},
+  reducer: {
+    [symboleApi.reducerPath]: symboleApi.reducer,
+    game: gameReducer,
+  },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: false,
