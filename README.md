@@ -1,79 +1,60 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+This is a simple memory game built using React Native with TypeScript. The game displays a grid of cards with hidden symbols, and the player needs to find matching pairs by flipping two cards at a time. It includes features such as difficulty levels, a move counter, a timer, and a leaderboard.
 
-# Getting Started
+## Table of Contents
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+- [Setup Instructions](#setup-instructions)
+- [Assumptions and Decisions](#assumptions-and-decisions)
+- [Completed Features](#completed-features)
+- [Ideas for Future Improvements](#ideas-for-future-improvements)
 
-## Step 1: Start the Metro Server
+## Setup Instructions
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+1. **Clone the repository**:
 
-To start Metro, run the following command from the _root_ of your React Native project:
+   ```bash
+   git clone https://github.com/siranshahi2014/learnovaTask.git
 
-```bash
-# using npm
-npm start
+   ```
 
-# OR using Yarn
-yarn start
-```
+2. **Navigate to the project directory**:
+   cd learnovaTask
 
-## Step 2: Start your Application
+3. **Install the dependencies**:
+   yarn install
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+4. **Start the development server: For iOS**:
+   yarn ios
 
-### For Android
+## Assumptions and Decisions
 
-```bash
-# using npm
-npm run android
+Leaderboard: The leaderboard is local and uses redux-persist to store data on the device. This was chosen to avoid the need for a backend service, though a future implementation could involve a remote API for global leaderboards.
 
-# OR using Yarn
-yarn android
-```
+Difficulty Levels: The game has three difficulty levels—Easy (4x4), Medium (6x6), and Hard (8x8). The number of cards in the grid is adjusted based on the difficulty level chosen by the user.
 
-### For iOS
+Animations: Card flipping is handled using Animated from react-native. The flip animation time is set to 300ms for a smooth experience.
 
-```bash
-# using npm
-npm run ios
+State Management: The entire game state is managed using Redux Toolkit. RTK Query is used to fetch symbols from a mock API.
 
-# OR using Yarn
-yarn ios
-```
+## Completed Features
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+Card Flip Animation: Smooth card flipping animation when a card is clicked.
+Redux Toolkit for State Management: The game state, including the cards, moves, and timer, is managed using Redux.
+RTK Query Integration: Symbols for the cards are fetched from a mock API using RTK Query.
+Leaderboard: Scores are stored locally using Redux Persist.
+Move Counter: The number of moves made by the player is displayed.
+Timer: A timer that tracks the duration of the game.
+Difficulty Levels: Easy, Medium, and Hard difficulty levels with 4x4, 6x6, and 8x8 grids, respectively.
+Game Over Detection: The game detects when all cards have been matched and shows a game over message.
+Persistent Game State: The game state is persisted across app reloads using redux-persist.
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+## Ideas for Future Improvements
 
-## Step 3: Modifying your App
+Global Leaderboard: Integrate a remote backend API to store and retrieve high scores globally, allowing users to compare their scores with others worldwide.
 
-Now that you have successfully run the app, let's modify it.
+Customizable Player Names: Add a feature where players can input their name before starting the game to be displayed on the leaderboard.
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
+Sound Effects and Visual Feedback: Add sound effects for card flips, successful matches, and game completion, as well as haptic feedback on supported devices.
 
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+Multiplayer Mode: Add a multiplayer mode where two players can compete in real-time or asynchronously.
 
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+Theming Support: Add light and dark theme support for improved accessibility and user experience.
