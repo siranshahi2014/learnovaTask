@@ -16,6 +16,10 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
+import {
+  initialWindowMetrics,
+  SafeAreaProvider,
+} from 'react-native-safe-area-context';
 
 import {
   Colors,
@@ -67,7 +71,10 @@ function App(): React.JSX.Element {
 
   return (
     <Provider store={store}>
-      <AppNavigator />
+      <SafeAreaProvider style={{flex: 1}} initialMetrics={initialWindowMetrics}>
+        <AppNavigator />
+      </SafeAreaProvider>
+
       {/* <SafeAreaView style={backgroundStyle}>
         <StatusBar
           barStyle={isDarkMode ? 'light-content' : 'dark-content'}
