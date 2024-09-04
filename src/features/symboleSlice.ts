@@ -8,6 +8,7 @@ interface GameState {
   moves: number;
   time: number;
   isGameOver: boolean;
+  difficulty: 'easy' | 'medium' | 'hard';
 }
 
 const initialState: GameState = {
@@ -16,6 +17,7 @@ const initialState: GameState = {
   moves: 0,
   time: 0,
   isGameOver: false,
+  difficulty: 'easy',
 };
 
 const gameSlice = createSlice({
@@ -61,13 +63,25 @@ const gameSlice = createSlice({
       state.time = 0;
       state.isGameOver = false;
     },
+    setDifficulty(state, action: PayloadAction<'easy' | 'medium' | 'hard'>) {
+      state.difficulty = action.payload;
+    },
   },
   extraReducers: builder => {
     builder.addMatcher(
       symboleApi.endpoints.getSymbols.matchFulfilled,
       (state, {payload}) => {
         if (payload) {
-          const concatList = payload.concat(payload);
+          let gridSize =
+            state.difficulty == 'medium'
+              ? 6
+              : state.difficulty == 'hard'
+              ? 8
+              : 4;
+
+          const selectedSymbols = payload.slice(0, gridSize / 2);
+
+          const concatList = selectedSymbols.concat(selectedSymbols);
           const randomList = concatList.sort(() => Math.random() - 0.5);
 
           const result = randomList.map((item, index) => ({
@@ -92,11 +106,13 @@ export const {
   incrementTime,
   setGameOver,
   resetGame,
+  setDifficulty,
 } = gameSlice.actions;
 
 export const selectCards = (state: RootState) => state.game.cards;
 export const selectIsGameOver = (state: RootState) => state.game.isGameOver;
 export const selectTime = (state: RootState) => state.game.time;
 export const selectMoves = (state: RootState) => state.game.moves;
+export const selectDifficulty = (state: RootState) => state.game.difficulty;
 
 export default gameSlice.reducer;

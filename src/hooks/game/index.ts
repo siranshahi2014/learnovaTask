@@ -3,6 +3,7 @@ import {
   checkMatch,
   flipCard,
   selectCards,
+  selectDifficulty,
   selectIsGameOver,
   selectMoves,
   selectTime,
@@ -15,6 +16,7 @@ export const useMemoryGame = () => {
   const isGameOver = useAppSelector(selectIsGameOver);
   const time = useAppSelector(selectTime);
   const moves = useAppSelector(selectMoves);
+  const difficulty = useAppSelector(selectDifficulty);
 
   const handleCardFlip = (id: number) => {
     if (cards.length && !isGameOver) {
@@ -31,6 +33,7 @@ export const useMemoryGame = () => {
     moves,
     time,
     isGameOver,
+    difficulty,
     handleCardFlip,
   };
 };

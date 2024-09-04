@@ -11,6 +11,7 @@ import {
   incrementTime,
   resetGame,
   setCards,
+  setDifficulty,
   setGameOver,
 } from '~/features/symboleSlice';
 import {useMemoryGame} from '~/hooks/game';
@@ -18,7 +19,8 @@ import {Colors} from '~/styles/colors';
 
 const HomeScreen = () => {
   const {isLoading} = useGetSymbolsQuery();
-  const {cards, moves, time, isGameOver, handleCardFlip} = useMemoryGame();
+  const {cards, moves, time, isGameOver, handleCardFlip, difficulty} =
+    useMemoryGame();
   const dispatch = useAppDispatch();
 
   // useEffect(() => {
@@ -56,7 +58,13 @@ const HomeScreen = () => {
     dispatch(resetGame());
     dispatch(symboleApi.util.resetApiState());
   };
-  const renderItem = ({item, index}: {item: SymboleCard; index: number}) => {
+
+  const onDifficultyChange = (level: 'easy' | 'medium' | 'hard') => {
+    dispatch(setDifficulty(level));
+    onRestartGame();
+  };
+
+  const renderItem = ({item}: {item: SymboleCard}) => {
     return <SymboleCard item={item} onPress={() => handleCardFlip(item.id)} />;
   };
 
@@ -66,6 +74,14 @@ const HomeScreen = () => {
       <Text style={styles.info}>
         Moves: {moves} | Time: {time}s
       </Text>
+
+      <Text style={styles.info}>Game Screen - {difficulty.toUpperCase()}</Text>
+      <View style={styles.difficultyButtons}>
+        <Button title="Easy" onPress={() => onDifficultyChange('easy')} />
+        <Button title="Medium" onPress={() => onDifficultyChange('medium')} />
+        <Button title="Hard" onPress={() => onDifficultyChange('hard')} />
+      </View>
+
       <FlatList
         data={cards}
         extraData={cards}
@@ -96,5 +112,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
     marginBottom: 16,
+  },
+  difficultyButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginVertical: 20,
   },
 });
